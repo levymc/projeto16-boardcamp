@@ -38,7 +38,7 @@ export default class ORM {
             itemData.pricePerDay
         );
 
-        const queryString = 'INSERT INTO public.games (id, name, image, "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4, $5)';
+        const queryString = 'INSERT INTO public.games (id, name, image, "stockTotal", "pricePerDay") VALUES (?, ?, ?, ?, ?)';
         const values = [newItem.id, newItem.name, newItem.image, newItem.stockTotal, newItem.pricePerDay];
     
         try {
@@ -70,27 +70,58 @@ export default class ORM {
         }
     }
     
-        // Método para atualizar um item no banco de dados
-        async update(id, itemData) {
+    async update(id, itemData) {
         await this.connect();
+    
         const itemToUpdate = this.items.find(item => item.id === id);
-        if (itemToUpdate) {
-            itemToUpdate.name = itemData.name || itemToUpdate.name;
-            itemToUpdate.image = itemData.image || itemToUpdate.image;
-            itemToUpdate.stockTotal = itemData.stockTotal || itemToUpdate.stockTotal;
-            itemToUpdate.pricePerDay = itemData.pricePerDay || itemToUpdate.pricePerDay;
-        }
-        await this.disconnect();
-        return itemToUpdate || null;
+        if (!itemToUpdate) {
+            await this.disconnect();
+            return null; // Item não encontrado, retorna null
         }
     
-        // Método para deletar um item do banco de dados pelo ID
-        async delete(id) {
+        itemToUpdate.name = itemData.name || itemToUpdate.name;
+        itemToUpdate.image = itemData.image || itemToUpdate.image;
+        itemToUpdate.stockTotal = itemData.stockTotal || itemToUpdate.stockTotal;
+        itemToUpdate.pricePerDay = itemData.pricePerDay || itemToUpdate.pricePerDay;
+    
+        const queryString = 'UPDATE public.games SET name = $1, image = $2, stockTotal = $3, pricePerDay = $4 WHERE id = $5';
+        const values = [itemToUpdate.name, itemToUpdate.image, itemToUpdate.stockTotal, itemToUpdate.pricePerDay, id];
+    
+        try {
+            await this.pool.query(queryString, values);
+            console.log('Item atualizado no banco de dados.');
+        } catch (error) {
+            console.error('Erro ao atualizar o item no banco de dados:', error.message);
+        }
+    
+        await this.disconnect();
+        return itemToUpdate;
+    }
+
+    async delete(id) {
         await this.connect();
+    
         const index = this.items.findIndex(item => item.id === id);
-        const deletedItem = index !== -1 ? this.items.splice(index, 1)[0] : null;
+        if (index === -1) {
+            await this.disconnect();
+            return null
+        }
+
+        const queryString = 'DELETE FROM public.games WHERE id = $1';
+        const values = [id];
+    
+        try {
+            await this.pool.query(queryString, values);
+            console.log('Item excluído do banco de dados.');
+        } catch (error) {
+            console.error('Erro ao excluir o item do banco de dados:', error.message);
+        }
+    
+        const deletedItem = this.items.splice(index, 1)[0];
+    
         await this.disconnect();
         return deletedItem;
-        }
+    }
+    
   }
   
