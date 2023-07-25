@@ -44,8 +44,7 @@ export default class ORM {
             rentalData.delayFee
         );
     
-        const queryString =
-            'INSERT INTO public.rentals (id, "customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const queryString ='INSERT INTO public.rentals (id, "customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const values = [
             newRental.id,
             newRental.customerId,
