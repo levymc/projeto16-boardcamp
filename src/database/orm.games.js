@@ -1,8 +1,7 @@
 import conectDB from "./database.connection.js";
 
 class Item {
-    constructor(id, name, image, stockTotal, pricePerDay) {
-        this.id = id;
+    constructor(name, image, stockTotal, pricePerDay) {
         this.name = name;
         this.image = image;
         this.stockTotal = stockTotal;
@@ -31,15 +30,14 @@ export default class GamesORM {
     async create(itemData) {
         await this.connect()
         const newItem = new Item(
-            itemData.id,
             itemData.name,
             itemData.image,
             itemData.stockTotal,
             itemData.pricePerDay
         )
 
-        const queryString = 'INSERT INTO public.games (id, name, image, "stockTotal", "pricePerDay") VALUES (?, ?, ?, ?, ?)'
-        const values = [newItem.id, newItem.name, newItem.image, newItem.stockTotal, newItem.pricePerDay]
+        const queryString = 'INSERT INTO public.games ("name", image, "stockTotal", "pricePerDay") VALUES ($1, $2, $3, $4)'
+        const values = [newItem.name, newItem.image, newItem.stockTotal, newItem.pricePerDay]
     
         try {
             await this.pool.query(queryString, values)

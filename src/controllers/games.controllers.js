@@ -8,3 +8,11 @@ export async function getGames(req, res){
 
     res.send(itemById)
 }
+
+export async function postGames(req, res){
+    const data = req.body
+    const orm = new GamesORM()
+    const item = await orm.create(data)
+    console.log(item)
+    res.send(item)
+}
