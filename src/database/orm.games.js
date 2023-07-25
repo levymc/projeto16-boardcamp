@@ -2,15 +2,15 @@ import conectDB from "./database.connection.js";
 
 class Item {
     constructor(id, name, image, stockTotal, pricePerDay) {
-      this.id = id;
-      this.name = name;
-      this.image = image;
-      this.stockTotal = stockTotal;
-      this.pricePerDay = pricePerDay;
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.stockTotal = stockTotal;
+        this.pricePerDay = pricePerDay;
     }
-  }
+}
 
-export default class ORM {
+export default class GamesORM {
     constructor() {
         this.pool = null
         this.items = []
@@ -18,34 +18,34 @@ export default class ORM {
         
     async connect() {
         this.pool = await conectDB()
-        console.log("Conexão com o banco de dados estabelecida.");
+        console.log("Conexão com o banco de dados estabelecida.")
     }
     
     async disconnect() {
         if (this.pool) {
             await this.pool.end();
-            console.log("Conexão com o banco de dados encerrada.");
+            console.log("Conexão com o banco de dados encerrada.")
         }
     }
     
     async create(itemData) {
-        await this.connect();
+        await this.connect()
         const newItem = new Item(
             itemData.id,
             itemData.name,
             itemData.image,
             itemData.stockTotal,
             itemData.pricePerDay
-        );
+        )
 
-        const queryString = 'INSERT INTO public.games (id, name, image, "stockTotal", "pricePerDay") VALUES (?, ?, ?, ?, ?)';
-        const values = [newItem.id, newItem.name, newItem.image, newItem.stockTotal, newItem.pricePerDay];
+        const queryString = 'INSERT INTO public.games (id, name, image, "stockTotal", "pricePerDay") VALUES (?, ?, ?, ?, ?)'
+        const values = [newItem.id, newItem.name, newItem.image, newItem.stockTotal, newItem.pricePerDay]
     
         try {
-            await this.pool.query(queryString, values);
-            console.log('Novo item adicionado ao banco de dados.');
+            await this.pool.query(queryString, values)
+            console.log('Novo item adicionado ao banco de dados.')
         } catch (error) {
-            console.error('Erro ao adicionar novo item ao banco de dados:', error.message);
+            console.error('Erro ao adicionar novo item ao banco de dados:', error.message)
         }
     
         this.items.push(newItem)
@@ -54,7 +54,7 @@ export default class ORM {
     }
     
     async read() {
-        await this.connect();
+        await this.connect()
     
         const queryString = 'SELECT * FROM public.games';
     
