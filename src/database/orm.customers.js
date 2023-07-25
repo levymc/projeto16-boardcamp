@@ -1,8 +1,7 @@
-import conectDB from "./database.connection";
+import conectDB from "./database.connection.js";
 
 class Customer {
-    constructor(id, name, phone, cpf, birthday) {
-        this.id = id;
+    constructor(name, phone, cpf, birthday) {
         this.name = name;
         this.phone = phone;
         this.cpf = cpf;
@@ -31,17 +30,17 @@ export default class CustomerORM {
     async create(customerData) {
     await this.connect();
     const newCustomer = new Customer(
-        customerData.id,
         customerData.name,
         customerData.phone,
         customerData.cpf,
         customerData.birthday
     );
 
-    const queryString =
-        'INSERT INTO public.customers (id, name, phone, cpf, birthday) VALUES (?, ?, ?, ?, ?)';
+    const queryString =`
+        INSERT INTO public.customers ("name", phone, cpf, birthday) VALUES ($1, $2, $3, $4)
+    `
+        
     const values = [
-        newCustomer.id,
         newCustomer.name,
         newCustomer.phone,
         newCustomer.cpf,
