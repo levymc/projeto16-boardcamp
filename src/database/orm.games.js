@@ -67,6 +67,22 @@ export default class GamesORM {
             return [];
         }
     }
+
+    async readByName(nome) {
+        await this.connect()
+
+        const queryString = `SELECT * from public.games WHERE "name" ILIKE '${nome}'`
+        try {
+            const response = await this.pool.query(queryString);
+            console.log('Consulta realizada com sucesso.');
+            await this.disconnect();
+            return response.rows || [];
+        } catch (error) {
+            console.error('Erro ao consultar os itens no banco de dados:', error.message);
+            await this.disconnect();
+            return [];
+        }
+    }
     
     async update(id, itemData) {
         await this.connect();
