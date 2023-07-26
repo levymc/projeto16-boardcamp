@@ -7,8 +7,7 @@ const gamesDao = new GamesDAO()
 const customerDao = new CustomerDAO()
 
 export async function getRentals(req, res, next){
-    const rentals = await dao.read()
-    console.log(rentals)
+    const rentals = await dao.readWithJoin()
     res.rentals = rentals
     next()
 }
@@ -17,15 +16,11 @@ export async function formatRentals(req, res) {
     try {
         const rentals = res.rentals;
         const formatedRentals = await Promise.all(rentals.map(async (rental) => {
-            const customer = await customerDao.readById(rental.customerId);
-            const game = await gamesDao.readById(rental.gameId); // Corrigir o parâmetro aqui
-    
-            rental.customer = { id: customer.id, name: customer.name };
-            rental.game = { id: game.id, name: game.name };
-    
+            rental.customer = { id: rental.customerId, name: rental.customerName };
+            rental.game = { id: rental.gameId, name: rental.gameName };
             return rental;
-        }));
-        console.log(formatedRentals)
+        }))
+        // console.log(formatedRentals)
         res.send(formatedRentals);
     } catch (error) {
         console.error("Erro ao formatar aluguéis:", error);

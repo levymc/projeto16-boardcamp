@@ -69,10 +69,32 @@ export default class RentalsDAO {
     }
   
     async read() {
-        await this.connect();
+        await this.connect()
     
         const queryString = 'SELECT * FROM public.rentals';
     
+        try {
+            const response = await this.pool.query(queryString);
+            console.log("Consulta realizada com sucesso.");
+            await this.disconnect();
+            return response.rows || [];
+        } catch (error) {
+            console.error("Erro ao consultar os aluguéis no banco de dados:", error.message);
+            await this.disconnect();
+            return [];
+        }
+    }
+
+    async readWithJoin(){
+        await this.connect()
+
+        const queryString = `
+                SELECT r.*, c."name" AS "customerName", g."name" AS "gameName"
+                FROM public.rentals r
+                JOIN public.customers c ON r."customerId" = c."id"
+                JOIN public.games g ON r."gameId" = g."id";
+                `
+
         try {
             const response = await this.pool.query(queryString);
             console.log("Consulta realizada com sucesso.");
