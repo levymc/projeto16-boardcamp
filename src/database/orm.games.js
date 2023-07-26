@@ -17,13 +17,13 @@ export default class GamesORM {
         
     async connect() {
         this.pool = await conectDB()
-        console.log("Conexão com o banco de dados estabelecida.")
+        console.log("Conexão!!!")
     }
     
     async disconnect() {
         if (this.pool) {
             await this.pool.end();
-            console.log("Conexão com o banco de dados encerrada.")
+            console.log("Fechou...")
         }
     }
     
