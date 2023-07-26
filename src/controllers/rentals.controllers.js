@@ -25,9 +25,29 @@ export async function formatRentals(req, res) {
         }))
         // console.log(formatedRentals)
         res.send(formatedRentals);
-    } catch (error) {
-        console.error("Erro ao formatar aluguéis:", error);
+    } catch (err) {
+        console.error("Erro formatar rentals:", err);
         res.status(500).send("Erro ao formatar aluguéis.");
     }
-  }
-  
+}
+
+
+export async function postRental(req, res){
+    try{
+        const data = req.body
+        const game = await gamesDao.readById(data.gameId)
+
+        data.rentDate = format(new Date(), 'yyyy-MM-dd')
+        data.returnDate = null
+        data.daysRented = Number(data.daysRented)
+        data.delayFee = null
+        data.originalPrice = game.pricePerDay * data.daysRented
+
+        const insertedData = await dao.create(data)
+        if (insertedData) return res.sendStatus(201)
+    }catch(err){
+        console.error("Erro insert rental:", err);
+        res.status(500).send("Erro ao inserir aluguel.");
+    }
+    
+}
