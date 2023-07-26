@@ -1,6 +1,9 @@
 import CustomerDAO from "../database/dao/dao.customers.js"
 import GamesDAO from "../database/dao/dao.games.js";
+import RentalsDAO from "../database/dao/dao.rentals.js";
 
+
+const dao = new RentalsDAO()
 const gamesDao = new GamesDAO()
 const customerDao = new CustomerDAO()
 
@@ -20,5 +23,19 @@ export async function checkIDs(req, res, next){
     }catch(err){
         console.error("Erro checkID rental:", err);
         res.status(500).send("Erro checkID aluguel.");
+    }
+}
+
+export async function checkStock(req, res, next){
+    try{
+        const data = req.body
+        const qntRentals = await dao.countByIdGame(data.gameId)
+        // console.log(Number(qntRentals) === res.game.stockTotal)
+        if (Number(qntRentals) === res.game.stockTotal) return res.sendStatus(400)
+
+        next()
+    }catch(err){
+        console.error("Erro checkStock rental:", err);
+        res.status(500).send("Erro checkStock aluguel.");
     }
 }

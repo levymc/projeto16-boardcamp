@@ -32,7 +32,6 @@ export async function postRental(req, res){
         const data = req.body
         const game = res.game
         
-
         data.rentDate = format(new Date(), 'yyyy-MM-dd')
         data.returnDate = null
         data.daysRented = Number(data.daysRented)

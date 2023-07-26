@@ -20,13 +20,13 @@ export default class RentalsDAO {
   
     async connect() {
         this.pool = await conectDB();
-        console.log("Conexão com o banco de dados estabelecida.");
+        console.log("Conexão!!");
     }
   
     async disconnect() {
         if (this.pool) {
             await this.pool.end();
-            console.log("Conexão com o banco de dados encerrada.");
+            console.log("...........");
         }
     }
   
@@ -68,11 +68,29 @@ export default class RentalsDAO {
         await this.disconnect()
         return newRental
     }
+
+    async countByIdGame(gameId){
+        await this.connect()
+
+        const queryString = `select count(*) from public.rentals where "gameId" = $1`
+        const value = [gameId]
+
+        try {
+            const response = await this.pool.query(queryString, value)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows[0].count || null
+        } catch (error) {
+            console.error("Erro rentals:", error.message)
+            await this.disconnect()
+            return null
+        }
+    }
   
     async read() {
         await this.connect()
     
-        const queryString = 'SELECT * FROM public.rentals'
+        const queryString = 'select * from public.rentals'
     
         try {
             const response = await this.pool.query(queryString)
