@@ -1,8 +1,7 @@
 import conectDB from "../database.connection.js";
 
 class Rental {
-    constructor(id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee) {
-      this.id = id;
+    constructor(customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee) {
       this.customerId = customerId;
       this.gameId = gameId;
       this.rentDate = rentDate;
@@ -34,7 +33,6 @@ export default class RentalsDAO {
     async create(rentalData) {
         await this.connect();
         const newRental = new Rental(
-            rentalData.id,
             rentalData.customerId,
             rentalData.gameId,
             rentalData.rentDate,
@@ -44,9 +42,12 @@ export default class RentalsDAO {
             rentalData.delayFee
         );
     
-        const queryString ='INSERT INTO public.rentals (id, "customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee") VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        const queryString =`
+                INSERT INTO public.rentals ("customerId", "gameId", "rentDate", 
+                "daysRented", "returnDate", "originalPrice", "delayFee") 
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                `
         const values = [
-            newRental.id,
             newRental.customerId,
             newRental.gameId,
             newRental.rentDate,
@@ -63,25 +64,25 @@ export default class RentalsDAO {
             console.error("Erro ao adicionar novo aluguel ao banco de dados:", error.message);
         }
     
-        this.rentals.push(newRental);
-        await this.disconnect();
-        return newRental;
+        this.rentals.push(newRental)
+        await this.disconnect()
+        return newRental
     }
   
     async read() {
         await this.connect()
     
-        const queryString = 'SELECT * FROM public.rentals';
+        const queryString = 'SELECT * FROM public.rentals'
     
         try {
-            const response = await this.pool.query(queryString);
-            console.log("Consulta realizada com sucesso.");
-            await this.disconnect();
-            return response.rows || [];
+            const response = await this.pool.query(queryString)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows || []
         } catch (error) {
-            console.error("Erro ao consultar os aluguéis no banco de dados:", error.message);
-            await this.disconnect();
-            return [];
+            console.error("Erro rentals:", error.message)
+            await this.disconnect()
+            return []
         }
     }
 
@@ -92,18 +93,18 @@ export default class RentalsDAO {
                 SELECT r.*, c."name" AS "customerName", g."name" AS "gameName"
                 FROM public.rentals r
                 JOIN public.customers c ON r."customerId" = c."id"
-                JOIN public.games g ON r."gameId" = g."id";
-                `
+                JOIN public.games g ON r."gameId" = g."id"; 
+                ` //UHUUUUU kraio
 
         try {
-            const response = await this.pool.query(queryString);
-            console.log("Consulta realizada com sucesso.");
-            await this.disconnect();
-            return response.rows || [];
+            const response = await this.pool.query(queryString)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows || []
         } catch (error) {
-            console.error("Erro ao consultar os aluguéis no banco de dados:", error.message);
-            await this.disconnect();
-            return [];
+            console.error("Erro rentals JOIN:", error.message)
+            await this.disconnect()
+            return []
         }
     }
   
@@ -139,9 +140,9 @@ export default class RentalsDAO {
     
         try {
             await this.pool.query(queryString, values);
-            console.log("Aluguel atualizado no banco de dados.");
+            console.log("Aluguel atualizado!");
         } catch (error) {
-            console.error("Erro ao atualizar o aluguel no banco de dados:", error.message);
+            console.error("Erro update rentals:", error.message);
         }
     
         await this.disconnect();
@@ -164,7 +165,7 @@ export default class RentalsDAO {
             await this.pool.query(queryString, values);
             console.log("Aluguel excluído do banco de dados.");
         } catch (error) {
-            console.error("Erro ao excluir o aluguel do banco de dados:", error.message);
+            console.error("Erro delete rental: ", error.message);
         }
     
         const deletedRental = this.rentals.splice(index, 1)[0];
