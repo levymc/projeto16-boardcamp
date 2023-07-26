@@ -1,4 +1,4 @@
-import conectDB from "./database.connection.js";
+import conectDB from "../database.connection.js";
 
 class Customer {
     constructor(name, phone, cpf, birthday) {
@@ -9,7 +9,7 @@ class Customer {
     }
 }
     
-export default class CustomerORM {
+export default class CustomerDAO{
     constructor() {
         this.pool = null;
         this.customers = [];

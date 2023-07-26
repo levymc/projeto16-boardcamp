@@ -1,4 +1,4 @@
-import conectDB from "./database.connection.js";
+import conectDB from "../database.connection.js";
 
 class Item {
     constructor(name, image, stockTotal, pricePerDay) {
@@ -9,7 +9,7 @@ class Item {
     }
 }
 
-export default class GamesORM {
+export default class GamesDAO {
     constructor() {
         this.pool = null
         this.items = []
