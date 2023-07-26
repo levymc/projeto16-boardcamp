@@ -20,5 +20,5 @@ export async function postGames(req, res){
 
     const item = await orm.create(data)
     console.log(item)
-    res.send(item)
+    res.status(201).send(item)
 }
