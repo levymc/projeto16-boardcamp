@@ -11,7 +11,7 @@ export async function getCustomers(req, res){
 
 export async function getCustomerById(req, res) {
     const id = req.params;
-    const customer = await dao.readById(id);
+    const customer = await dao.readById(id.id);
     console.log(customer);
 
     if (customer) {

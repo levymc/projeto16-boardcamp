@@ -1,4 +1,4 @@
-import conectDB from "../database.connection";
+import conectDB from "../database.connection.js";
 
 class Rental {
     constructor(id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee) {
@@ -13,7 +13,7 @@ class Rental {
     }
 }
   
-export default class ORM {
+export default class RentalsDAO {
     constructor() {
         this.pool = null;
         this.rentals = [];

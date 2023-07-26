@@ -2,9 +2,9 @@ import axios from 'axios'
 
 
 axios.post('http://localhost:5000/customers', {
-    name: 'Levy',
-    phone: '16997350060',
-    cpf: '42700467833',
+    name: 'Vitorio',
+    phone: '21998899222',
+    cpf: '01234527890',
     birthday: '1992-10-25'
 }).then(res =>{
     console.log(res.data)
