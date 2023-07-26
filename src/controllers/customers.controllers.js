@@ -5,6 +5,10 @@ const dao = new CustomerDAO()
 
 export async function getCustomers(req, res){
     const customers = await dao.read()
+    const formatedCustomers = await Promise.all(customers.map(async (customer) => {
+        customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
+        return customer;
+    }))
     // console.log(customers)
     res.send(customers)
 }
