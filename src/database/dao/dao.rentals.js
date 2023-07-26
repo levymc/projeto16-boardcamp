@@ -1,4 +1,4 @@
-import conectDB from "./database.connection";
+import conectDB from "../database.connection";
 
 class Rental {
     constructor(id, customerId, gameId, rentDate, daysRented, returnDate, originalPrice, delayFee) {

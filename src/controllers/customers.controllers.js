@@ -1,17 +1,17 @@
-import CustomerORM from "../database/orm.customers.js"
+import CustomerDAO from "../database/dao/dao.customers.js"
 import { format } from 'date-fns';
 
-const orm = new CustomerORM()
+const dao = new CustomerDAO()
 
 export async function getCustomers(req, res){
-    const customers = await orm.read()
+    const customers = await dao.read()
     // console.log(customers)
     res.send(customers)
 }
 
 export async function getCustomerById(req, res) {
     const id = req.params;
-    const customer = await orm.readById(id);
+    const customer = await dao.readById(id);
     console.log(customer);
 
     if (customer) {
@@ -25,7 +25,7 @@ export async function getCustomerById(req, res) {
 
 export async function postCustomer(req, res){
     const data = req.body
-    const insertedData = await orm.create(data)
+    const insertedData = await dao.create(data)
 
     
     if (insertedData) return res.sendStatus(201)

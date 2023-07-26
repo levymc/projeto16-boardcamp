@@ -1,6 +1,6 @@
-import CustomerORM from "../database/orm.customers.js"
+import CustomerDAO from "../database/dao/dao.customers.js"
 
-const orm = new CustomerORM()
+const orm = new CustomerDAO()
 
 export default async function validateCPF(req, res, next){
     const cpf = req.body.cpf
