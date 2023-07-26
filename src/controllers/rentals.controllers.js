@@ -1,6 +1,8 @@
 import RentalsDAO from "../database/dao/dao.rentals.js";
 import CustomerDAO from "../database/dao/dao.customers.js"
 import GamesDAO from "../database/dao/dao.games.js";
+import { format } from 'date-fns';
+
 
 const dao = new RentalsDAO()
 const gamesDao = new GamesDAO()
@@ -16,9 +18,10 @@ export async function formatRentals(req, res) {
     try {
         const rentals = res.rentals;
         const formatedRentals = await Promise.all(rentals.map(async (rental) => {
-            rental.customer = { id: rental.customerId, name: rental.customerName };
-            rental.game = { id: rental.gameId, name: rental.gameName };
-            return rental;
+            rental.customer = { id: rental.customerId, name: rental.customerName }
+            rental.game = { id: rental.gameId, name: rental.gameName }
+            rental.rentDate = format(new Date(rental.rentDate), 'yyyy-MM-dd');
+            return rental
         }))
         // console.log(formatedRentals)
         res.send(formatedRentals);
