@@ -6,8 +6,8 @@ import axios from 'axios'
 //     console.log(err)
 // })
 
-axios.get('http://localhost:5000/customers/2').then(res => {
+axios.get('http://localhost:5000/customers/3').then(res => {
     console.log(res.data)
 }).catch(err => {
-    console.log(err)
+    console.log(err.response.data)
 })

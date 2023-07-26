@@ -12,5 +12,6 @@ export async function getCustomerById(req, res){
     const id = req.params
     const customer = await orm.readById(id)
     console.log(customer)
-    res.send(customer)
+
+    customer ? res.send(customer) : res.status(404).send("Usuário não encontrado!")
 }
