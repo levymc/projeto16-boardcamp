@@ -2,18 +2,19 @@ import { Router } from "express";
 // import authRouter from "./auth.routes.js";
 import { getGames, postGames } from "../controllers/games.controllers.js"
 import { getCustomers, getCustomerById, postCustomer } from "../controllers/customers.controllers.js";
-import validateItem from "../middlewares/validateItem.js";
-
+import validateSchema from "../middlewares/validates.js";
+import itemSchema from "../schemas/item.schema.js";
+import customerSchema from "../schemas/customer.schema.js";
 
 const router = Router();
 
 // router.use(authRouter)
 router.get('/games', getGames);
-router.post('/games', validateItem, postGames)
+router.post('/games', (req, res, next) => { validateSchema(req, res, next, itemSchema) }, postGames)
 
 router.get('/customers', getCustomers)
 router.get('/customers/:id', getCustomerById)
-router.post('/customers', postCustomer)
+router.post('/customers', (req, res, next) => { validateSchema(req, res, next, customerSchema) }, postCustomer)
 
 router.use((err, req, res, next) => {
     console.error(err);
