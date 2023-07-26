@@ -99,6 +99,23 @@ export default class CustomerORM {
         
     }
 
+    async readByCPF(cpf){
+        await this.connect()
+        const queryString = `SELECT * FROM public.customers where "cpf" = $1`
+        const values = [cpf]
+        try {
+            const response = await this.pool.query(queryString, values)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows[0] || null
+        } catch (error) {
+            console.error("Erro consulta por id: ", error.message);
+            await this.disconnect();
+            return null;
+        }
+        
+    }
+
     async update(id, customerData){
         await this.connect()
 
