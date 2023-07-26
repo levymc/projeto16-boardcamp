@@ -3,6 +3,7 @@ import { Router } from "express";
 import { getGames, postGames } from "../controllers/games.controllers.js"
 import { getCustomers, getCustomerById, postCustomer } from "../controllers/customers.controllers.js";
 import { getRentals, formatRentals, postRental } from "../controllers/rentals.controllers.js";
+import { checkIDs } from "../middlewares/validateRental.js";
 import validateCPF from "../middlewares/validateCPF.js";
 import validateSchema from "../middlewares/validateSchema.js";
 import itemSchema from "../schemas/item.schema.js";
@@ -21,7 +22,7 @@ router.get('/customers/:id', getCustomerById)
 router.post('/customers', (req, res, next) => { validateSchema(req, res, next, customerSchema) }, validateCPF, postCustomer)
 
 router.get('/rentals', getRentals, formatRentals)
-router.post('/rentals', postRental)
+router.post('/rentals', checkIDs, postRental)
 
 router.use((err, req, res, next) => {
     console.error(err);

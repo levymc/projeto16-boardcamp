@@ -1,12 +1,8 @@
 import RentalsDAO from "../database/dao/dao.rentals.js";
-import CustomerDAO from "../database/dao/dao.customers.js"
-import GamesDAO from "../database/dao/dao.games.js";
 import { format } from 'date-fns';
 
 
 const dao = new RentalsDAO()
-const gamesDao = new GamesDAO()
-const customerDao = new CustomerDAO()
 
 export async function getRentals(req, res, next){
     const rentals = await dao.readWithJoin()
@@ -16,7 +12,7 @@ export async function getRentals(req, res, next){
 
 export async function formatRentals(req, res) {
     try {
-        const rentals = res.rentals;
+        const rentals = res.rentals
         const formatedRentals = await Promise.all(rentals.map(async (rental) => {
             rental.customer = { id: rental.customerId, name: rental.customerName }
             rental.game = { id: rental.gameId, name: rental.gameName }
@@ -31,11 +27,11 @@ export async function formatRentals(req, res) {
     }
 }
 
-
 export async function postRental(req, res){
     try{
         const data = req.body
-        const game = await gamesDao.readById(data.gameId)
+        const game = res.game
+        
 
         data.rentDate = format(new Date(), 'yyyy-MM-dd')
         data.returnDate = null
