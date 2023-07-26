@@ -15,3 +15,11 @@ export async function getCustomerById(req, res){
 
     customer ? res.send(customer) : res.status(404).send("Usuário não encontrado!")
 }
+
+export async function postCustomer(req, res){
+    const data = req.body
+    const insertedData = await orm.create(data)
+
+    
+    if (insertedData) return res.sendStatus(201)
+}

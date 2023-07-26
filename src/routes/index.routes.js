@@ -1,7 +1,7 @@
 import { Router } from "express";
 // import authRouter from "./auth.routes.js";
 import { getGames, postGames } from "../controllers/games.controllers.js"
-import { getCustomers, getCustomerById } from "../controllers/customers.controllers.js";
+import { getCustomers, getCustomerById, postCustomer } from "../controllers/customers.controllers.js";
 import validateItem from "../middlewares/validateItem.js";
 
 
@@ -13,6 +13,7 @@ router.post('/games', validateItem, postGames)
 
 router.get('/customers', getCustomers)
 router.get('/customers/:id', getCustomerById)
+router.post('/customers', postCustomer)
 
 router.use((err, req, res, next) => {
     console.error(err);
