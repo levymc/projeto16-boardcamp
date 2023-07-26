@@ -2,7 +2,7 @@ import { Router } from "express";
 // import authRouter from "./auth.routes.js";
 import { getGames, postGames } from "../controllers/games.controllers.js"
 import { getCustomers, getCustomerById, postCustomer } from "../controllers/customers.controllers.js";
-import validateSchema from "../middlewares/validates.js";
+import validateSchema from "../middlewares/validateSchema.js";
 import itemSchema from "../schemas/item.schema.js";
 import customerSchema from "../schemas/customer.schema.js";
 
