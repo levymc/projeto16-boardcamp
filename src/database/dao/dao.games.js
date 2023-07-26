@@ -68,6 +68,23 @@ export default class GamesDAO {
         }
     }
 
+    async readById(id) {
+        await this.connect()
+
+        const queryString = `SELECT * from public.games WHERE "id" = $1`
+        const value = [id]
+        try {
+            const response = await this.pool.query(queryString, value)
+            console.log('Consulta realizada com sucesso.')
+            await this.disconnect()
+            return response.rows[0] || null
+        } catch (error) {
+            console.error('Erro ao consultar os itens no banco de dados:', error.message)
+            await this.disconnect()
+            return null
+        }
+    }
+
     async readByName(nome) {
         await this.connect()
 

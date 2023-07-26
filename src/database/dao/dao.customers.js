@@ -85,7 +85,7 @@ export default class CustomerDAO{
     async readById(id){
         await this.connect()
         const queryString = `SELECT * FROM public.customers where "id" = $1`
-        const values = [id.id]
+        const values = [id]
         try {
             const response = await this.pool.query(queryString, values)
             console.log("Consulta realizada com sucesso.")
