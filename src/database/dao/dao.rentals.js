@@ -26,7 +26,6 @@ export default class RentalsDAO {
     async disconnect() {
         if (this.pool) {
             await this.pool.end();
-            console.log("...........");
         }
     }
   
