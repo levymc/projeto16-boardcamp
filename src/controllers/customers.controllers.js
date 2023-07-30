@@ -15,13 +15,8 @@ export async function getCustomers(req, res){
                 return customer
             }))
             return res.send(formatedCustomers)
-        }if ( offset || limit ){
-            // console.log(offset, limit)
-            const itens = await dao.readLimitOffset(limit, offset)
-            return res.send(itens)
         }
-
-        const customers = await dao.read()
+        const customers = await dao.read(limit, offset)
         const formatedCustomers = await Promise.all(customers.map(async (customer) => {
             customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
             return customer;

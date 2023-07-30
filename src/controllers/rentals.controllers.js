@@ -18,12 +18,8 @@ export async function getRentals(req, res, next){
             const rentals = await dao.readWithJoinByGameID(gameId)
             res.rentals = rentals
             return next()
-        }if( limit || offset ){
-            const rentals = await dao.readLimitOffset(limit, offset)
-            res.rentals = rentals
-            return next()
         }
-        const rentals = await dao.readWithJoin()
+        const rentals = await dao.readWithJoin(limit, offset)
         res.rentals = rentals
         next()
         

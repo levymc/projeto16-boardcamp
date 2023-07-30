@@ -86,13 +86,14 @@ export default class RentalsDAO {
         }
     }
   
-    async read() {
+    async read(limit, offset) {
         await this.connect()
     
-        const queryString = 'select * from public.rentals'
+        const queryString = 'select * from public.rentals limit $1 offset $2'
+        const values = [limit, offset]
     
         try {
-            const response = await this.pool.query(queryString)
+            const response = await this.pool.query(queryString, values)
             console.log("Consulta realizada com sucesso.")
             await this.disconnect()
             return response.rows || []
@@ -137,27 +138,31 @@ export default class RentalsDAO {
         }
     }
 
-    async readWithJoin(){
-        await this.connect()
-
+    async readWithJoin(limit = null, offset = null) {
+        await this.connect();
+      
         const queryString = `
-                SELECT r.*, c."name" AS "customerName", g."name" AS "gameName"
-                FROM public.rentals r
-                JOIN public.customers c ON r."customerId" = c."id"
-                JOIN public.games g ON r."gameId" = g."id"; 
-                ` //UHUUUUU kraio
-
+          SELECT r.*, c."name" AS "customerName", g."name" AS "gameName"
+          FROM public.rentals r
+          JOIN public.customers c ON r."customerId" = c."id"
+          JOIN public.games g ON r."gameId" = g."id" 
+          LIMIT $1 OFFSET $2;
+        `;
+      
+        const values = [limit, offset];
+      
         try {
-            const response = await this.pool.query(queryString)
-            console.log("Consulta realizada com sucesso.")
-            await this.disconnect()
-            return response.rows || []
+          const response = await this.pool.query(queryString, values);
+          console.log("Consulta realizada com sucesso.");
+          await this.disconnect();
+          return response.rows || [];
         } catch (error) {
-            console.error("Erro rentals JOIN:", error.message)
-            await this.disconnect()
-            return []
+          console.error("Erro rentals JOIN:", error.message);
+          await this.disconnect();
+          return [];
         }
-    }
+      }
+      
 
     async readWithJoinByCustomerID(customerId){
         await this.connect()

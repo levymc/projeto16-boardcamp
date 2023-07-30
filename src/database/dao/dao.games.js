@@ -51,20 +51,21 @@ export default class GamesDAO {
         return newItem
     }
     
-    async read() {
+    async read(limit = null, offset = null) {
         await this.connect()
     
-        const queryString = 'SELECT * FROM public.games';
+        const queryString = 'SELECT * FROM public.games limit $1 offset $2'
+        const values = [limit, offset]
     
         try {
-            const response = await this.pool.query(queryString);
-            console.log('Consulta realizada com sucesso.');
-            await this.disconnect();
-            return response.rows || [];
+            const response = await this.pool.query(queryString, values)
+            console.log('Consulta realizada com sucesso.')
+            await this.disconnect()
+            return response.rows || []
         } catch (error) {
-            console.error('Erro ao consultar os itens no banco de dados:', error.message);
-            await this.disconnect();
-            return [];
+            console.error('Erro ao consultar os itens no banco de dados:', error.message)
+            await this.disconnect()
+            return []
         }
     }
 
@@ -82,23 +83,6 @@ export default class GamesDAO {
             console.error('Erro ao consultar os itens no banco de dados:', error.message)
             await this.disconnect()
             return null
-        }
-    }
-
-    async readLimitOffset(limit = null, offset = null){
-        await this.connect()
-
-        const queryString = `select * from public.games limit $1 offset $2`
-        const values = [limit, offset]
-        try {
-            const response = await this.pool.query(queryString, values);
-            console.log('Consulta realizada com sucesso.');
-            await this.disconnect();
-            return response.rows || [];
-        } catch (error) {
-            console.error('Erro ao consultar os itens no banco de dados:', error.message);
-            await this.disconnect();
-            return [];
         }
     }
 
