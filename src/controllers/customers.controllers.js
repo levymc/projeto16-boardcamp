@@ -4,24 +4,38 @@ import { format } from 'date-fns';
 const dao = new CustomerDAO()
 
 export async function getCustomers(req, res){
-    const customers = await dao.read()
-    const formatedCustomers = await Promise.all(customers.map(async (customer) => {
-        customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
-        return customer;
-    }))
-    res.send(customers)
+    const paramName = req.query.name
+
+    try{
+        const customers = await dao.read()
+        const formatedCustomers = await Promise.all(customers.map(async (customer) => {
+            customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
+            return customer;
+        }))
+        res.send(formatedCustomers)
+    }catch (err) {
+        console.error("Erro getById customer:", err)
+        return res.status(500).send("Erro customer.")
+    }
+    
 }
 
 export async function getCustomerById(req, res) {
     const id = req.params;
-    const customer = await dao.readById(id.id);
+    try{
+        const customer = await dao.readById(id.id);
 
-    if (customer) {
-        customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
-        res.send(customer).status(201);
-    } else {
-        res.status(404).send("Usuário não encontrado!");
+        if (customer) {
+            customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
+            res.send(customer).status(201);
+        } else {
+            res.status(404).send("Usuário não encontrado!");
+        }
+    }catch (err) {
+        console.error("Erro getById customer:", err)
+        return res.status(500).send("Erro customer.")
     }
+    
 }
 
 export async function postCustomer(req, res){
