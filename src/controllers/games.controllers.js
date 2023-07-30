@@ -3,7 +3,6 @@ import GamesDAO from "../database/dao/dao.games.js";
 const dao = new GamesDAO()
 
 export async function getGames(req, res) {
-    console.log("Aqui")
     const paramName = req.query.name
     try {
         if (paramName){

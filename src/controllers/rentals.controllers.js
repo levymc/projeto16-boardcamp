@@ -5,9 +5,24 @@ import { format, addDays } from 'date-fns';
 const dao = new RentalsDAO()
 
 export async function getRentals(req, res, next){
-    const rentals = await dao.readWithJoin()
-    res.rentals = rentals
-    next()
+    const costumerId = req.query.costumerId
+    const gameId = req.query.gameId
+    // console.log(gameId, costumerId)
+    try{
+        if(costumerId || gameId){
+            const rentals = await dao.readWithJoinById(gameId, costumerId)
+            res.rentals = rentals
+            next()
+        }else{
+            const rentals = await dao.readWithJoin()
+            res.rentals = rentals
+            next()
+        }
+    }catch (err) {
+        console.error("Erro get rentals:", err);
+        res.status(500).send("Erro aluguéis.");
+    }
+    
 }
 
 export async function formatRentals(req, res) {
@@ -21,7 +36,7 @@ export async function formatRentals(req, res) {
         }))
         // console.log(formatedRentals)
         res.send(formatedRentals);
-    } catch (err) {
+    }catch (err) {
         console.error("Erro formatar rentals:", err);
         res.status(500).send("Erro ao formatar aluguéis.");
     }
