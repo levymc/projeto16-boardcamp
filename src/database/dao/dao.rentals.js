@@ -104,6 +104,23 @@ export default class RentalsDAO {
         }
     }
 
+    async readById(id){
+        await this.connect()
+        const queryString = `SELECT * FROM public.rentals where "id" = $1`
+        const values = [id]
+        try {
+            const response = await this.pool.query(queryString, values)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows[0] || null
+        } catch (error) {
+            console.error("Erro consulta por id: ", error.message);
+            await this.disconnect();
+            return null;
+        }
+        
+    }
+
     async readWithJoin(){
         await this.connect()
 
@@ -128,32 +145,21 @@ export default class RentalsDAO {
   
     async update(id, rentalData) {
         await this.connect();
-    
-        const rentalToUpdate = this.rentals.find((rental) => rental.id === id);
-        if (!rentalToUpdate) {
-            await this.disconnect();
-            return null; // Aluguel não encontrado, retorna null
-        }
-    
-        rentalToUpdate.customerId = rentalData.customerId || rentalToUpdate.customerId;
-        rentalToUpdate.gameId = rentalData.gameId || rentalToUpdate.gameId;
-        rentalToUpdate.rentDate = rentalData.rentDate || rentalToUpdate.rentDate;
-        rentalToUpdate.daysRented = rentalData.daysRented || rentalToUpdate.daysRented;
-        rentalToUpdate.returnDate = rentalData.returnDate || rentalToUpdate.returnDate;
-        rentalToUpdate.originalPrice = rentalData.originalPrice || rentalToUpdate.originalPrice;
-        rentalToUpdate.delayFee = rentalData.delayFee || rentalToUpdate.delayFee;
-    
-        const queryString =
-            'UPDATE public.rentals SET "customerId" = $1, "gameId" = $2, "rentDate" = $3, "daysRented" = $4, "returnDate" = $5, "originalPrice" = $6, "delayFee" = $7 WHERE id = $8';
+        const queryString =`update 
+                                public.rentals 
+                            set 
+                                "customerId" = $1, "gameId" = $2, "rentDate" = $3, "daysRented" = $4, "returnDate" = $5, "originalPrice" = $6, "delayFee" = $7 
+                            where 
+                                id = $8`
         const values = [
-            rentalToUpdate.customerId,
-            rentalToUpdate.gameId,
-            rentalToUpdate.rentDate,
-            rentalToUpdate.daysRented,
-            rentalToUpdate.returnDate,
-            rentalToUpdate.originalPrice,
-            rentalToUpdate.delayFee,
-            id,
+          rentalData.customerId,
+          rentalData.gameId,
+          rentalData.rentDate,
+          rentalData.daysRented,
+          rentalData.returnDate,
+          rentalData.originalPrice,
+          rentalData.delayFee,
+          id,
         ];
     
         try {
@@ -164,7 +170,7 @@ export default class RentalsDAO {
         }
     
         await this.disconnect();
-        return rentalToUpdate;
+        return rentalData;
     }
   
     async delete(id) {
