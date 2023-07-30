@@ -57,9 +57,7 @@ export async function finalizeRental(req, res) {
         const finalDate = format(addDays(rental.rentDate, rental.daysRented), 'yyyy-MM-dd')
         const priceDay = rental.originalPrice/rental.daysRented
         const delayFee = difDias(finalDate, returnDate) > 0 ? difDias(finalDate, returnDate) * priceDay : 0
-
-        console.log(difDias(finalDate, returnDate), priceDay)
-    
+        // console.log(difDias(finalDate, returnDate), priceDay)
         const newData = {
             customerId: rental.customerId,
             gameId: rental.gameId,
@@ -71,9 +69,8 @@ export async function finalizeRental(req, res) {
         }
         // console.log(newData)
         const updatedData = await dao.update(id, newData)
-    
         if (updatedData) {
-            console.log(updatedData)
+            console.log("ATT: " + updatedData)
             res.sendStatus(200)
         } else {
             res.status(500).send("Erro ao atualizar aluguel.");
@@ -82,7 +79,32 @@ export async function finalizeRental(req, res) {
         console.error("Erro update rental:", err);
         res.status(500).send("Erro ao atualizar aluguel.");
     }
-  }
+}
+
+export async function deleteRental(req, res){
+    const id = req.params.id
+    try{
+        console.log(id)
+        const rental = await dao.readById(id)
+        if (rental === null) return res.sendStatus(404)
+        if (rental.returnDate === null) return res.sendStatus(400)
+
+        console.log("aqui")
+
+        const deletedData = await dao.delete(id)
+        console.log(deletedData)
+        if (deletedData) {
+            console.log("Deleted: " + deletedData)
+            res.sendStatus(200)
+        } else {
+            res.status(500).send("Erro ao deletar aluguel.");
+        }
+
+    }catch (err) {
+        console.error("Erro delete rental:", err);
+        res.status(500).send("Erro ao deletar aluguel.");
+    }
+}
 
 function difDias(d1, d2){
     const data1 = new Date(d1)
@@ -94,3 +116,4 @@ function difDias(d1, d2){
 
     return dias 
 }
+

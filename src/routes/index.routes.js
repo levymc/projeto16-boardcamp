@@ -2,7 +2,7 @@ import { Router } from "express";
 // import authRouter from "./auth.routes.js";
 import { getGames, postGames } from "../controllers/games.controllers.js"
 import { getCustomers, getCustomerById, postCustomer, updateCustomer } from "../controllers/customers.controllers.js";
-import { getRentals, formatRentals, postRental, finalizeRental } from "../controllers/rentals.controllers.js";
+import { getRentals, formatRentals, postRental, finalizeRental, deleteRental } from "../controllers/rentals.controllers.js";
 import { checkIDs, checkStock } from "../middlewares/validateRental.js";
 import { validateCPF, validateCPF2 } from "../middlewares/validateCPF.js";
 import validateSchema from "../middlewares/validateSchema.js";
@@ -25,6 +25,7 @@ router.put('/customers/:id', (req, res, next) => { validateSchema(req, res, next
 router.get('/rentals', getRentals, formatRentals)
 router.post('/rentals', checkIDs, checkStock, postRental)
 router.post('/rentals/:id/return', finalizeRental)
+router.delete('/rentals/:id', deleteRental)
 
 router.use((err, req, res, next) => {
     console.error(err);
