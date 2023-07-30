@@ -122,7 +122,7 @@ export default class CustomerDAO{
             const response = await this.pool.query(queryString)
             console.log("Consulta realizada com sucesso.")
             await this.disconnect()
-            return response.rows[0] || null
+            return response.rows || null
         } catch (error) {
             console.error("Erro consulta por id: ", error.message);
             await this.disconnect();
