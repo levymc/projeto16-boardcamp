@@ -12,16 +12,16 @@ export async function getRentals(req, res, next){
         if(costumerId){
             const rentals = await dao.readWithJoinByCustomerID(costumerId)
             res.rentals = rentals
-            next()
-        }else if(gameId){
+            return next()
+        }if(gameId){
             const rentals = await dao.readWithJoinByGameID(gameId)
             res.rentals = rentals
-            next()
-        }else{
-            const rentals = await dao.readWithJoin()
-            res.rentals = rentals
-            next()
+            return next()
         }
+        const rentals = await dao.readWithJoin()
+        res.rentals = rentals
+        next()
+        
     }catch (err) {
         console.error("Erro get rentals:", err);
         res.status(500).send("Erro aluguéis.");
