@@ -92,5 +92,5 @@ function difDias(d1, d2){
 
     const dias = dif / (1000 * 60 * 60 * 24);
 
-    return dias + 1
+    return dias 
 }
