@@ -1,6 +1,6 @@
 import { Router } from "express";
 // import authRouter from "./auth.routes.js";
-import { getGames, postGames } from "../controllers/games.controllers.js"
+import { getGames, postGames, getGameByName } from "../controllers/games.controllers.js"
 import { getCustomers, getCustomerById, postCustomer, updateCustomer } from "../controllers/customers.controllers.js";
 import { getRentals, formatRentals, postRental, finalizeRental, deleteRental } from "../controllers/rentals.controllers.js";
 import { checkIDs, checkStock } from "../middlewares/validateRental.js";
@@ -16,6 +16,7 @@ const router = Router();
 // router.use(authRouter)
 router.get('/games', getGames);
 router.post('/games', (req, res, next) => { validateSchema(req, res, next, itemSchema) }, postGames)
+// router.get('/games?:name', getGameByName)
 
 router.get('/customers', getCustomers)
 router.get('/customers/:id', getCustomerById)
