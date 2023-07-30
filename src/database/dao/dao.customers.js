@@ -113,7 +113,21 @@ export default class CustomerDAO{
             await this.disconnect();
             return null;
         }
-        
+    }
+
+    async readIlikeCPF(cpf){
+        await this.connect()
+        const queryString = `SELECT * FROM public.customers where "cpf" ilike '%${cpf}%'`
+        try {
+            const response = await this.pool.query(queryString)
+            console.log("Consulta realizada com sucesso.")
+            await this.disconnect()
+            return response.rows[0] || null
+        } catch (error) {
+            console.error("Erro consulta por id: ", error.message);
+            await this.disconnect();
+            return null;
+        }
     }
 
     async update(id, customerData) {

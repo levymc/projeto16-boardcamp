@@ -4,15 +4,21 @@ import { format } from 'date-fns';
 const dao = new CustomerDAO()
 
 export async function getCustomers(req, res){
-    const paramName = req.query.name
-
+    const paramCPF = req.query.cpf
     try{
-        const customers = await dao.read()
-        const formatedCustomers = await Promise.all(customers.map(async (customer) => {
-            customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
-            return customer;
-        }))
-        res.send(formatedCustomers)
+        if(paramCPF){
+            const customer = await dao.readIlikeCPF(paramCPF)
+
+            if(customer) customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
+            return res.send(customer)
+        }else{
+            const customers = await dao.read()
+            const formatedCustomers = await Promise.all(customers.map(async (customer) => {
+                customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
+                return customer;
+            }))
+            return res.send(formatedCustomers)
+        }
     }catch (err) {
         console.error("Erro getById customer:", err)
         return res.status(500).send("Erro customer.")
