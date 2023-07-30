@@ -2,16 +2,23 @@ import GamesDAO from "../database/dao/dao.games.js";
 
 const dao = new GamesDAO()
 
-export async function getGames(req, res){
-    try{
-        const itens = await dao.read()
-        res.send(itens)
-    }catch (err) {
-        console.error("Erro get games:", err);
-        res.status(500).send("Erro games.");
+export async function getGames(req, res) {
+    console.log("Aqui")
+    const paramName = req.query.name
+    try {
+        if (paramName){
+            const itens = await dao.readByName(paramName)
+            return res.send(itens)
+        }else{
+            const itens = await dao.read()
+            return res.send(itens)
+        }
+    } catch (err) {
+        console.error("Erro get games:", err)
+        return res.status(500).send("Erro games.")
     }
-   
-}
+  }
+  
 
 export async function postGames(req, res){
     try{
@@ -33,5 +40,7 @@ export async function postGames(req, res){
 }
 
 export async function getGameByName(req, res){
-    
+    console.log("Aquii")
+    const paramName = req.query.name
+    console.log(paramName)
 }

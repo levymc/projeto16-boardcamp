@@ -88,7 +88,7 @@ export default class GamesDAO {
     async readByName(nome) {
         await this.connect()
 
-        const queryString = `SELECT * from public.games WHERE "name" ILIKE '${nome}'`
+        const queryString = `SELECT * from public.games WHERE "name" ilike '%${nome}%'`
         try {
             const response = await this.pool.query(queryString);
             console.log('Consulta realizada com sucesso.');
