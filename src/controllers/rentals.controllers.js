@@ -5,12 +5,12 @@ import { format, addDays } from 'date-fns';
 const dao = new RentalsDAO()
 
 export async function getRentals(req, res, next){
-    const costumerId = req.query.costumerId
+    const customerId = req.query.customerId
     const gameId = req.query.gameId
-    console.log(gameId, costumerId)
+    console.log(gameId, customerId)
     try{
-        if(costumerId){
-            const rentals = await dao.readWithJoinByCustomerID(costumerId)
+        if(customerId){
+            const rentals = await dao.readWithJoinByCustomerID(customerId)
             res.rentals = rentals
             return next()
         }if(gameId){
