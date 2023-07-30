@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.get('http://localhost:5000/games?name=Ba').then(res => {
+axios.get('http://localhost:5000/rentals?gameId=6').then(res => {
     console.log(res.data)
 }).catch(err => {
     console.log(err)
