@@ -85,6 +85,23 @@ export default class GamesDAO {
         }
     }
 
+    async readLimitOffset(limit = null, offset = null){
+        await this.connect()
+
+        const queryString = `select * from public.games limit $1 offset $2`
+        const values = [limit, offset]
+        try {
+            const response = await this.pool.query(queryString, values);
+            console.log('Consulta realizada com sucesso.');
+            await this.disconnect();
+            return response.rows || [];
+        } catch (error) {
+            console.error('Erro ao consultar os itens no banco de dados:', error.message);
+            await this.disconnect();
+            return [];
+        }
+    }
+
     async readByName(nome) {
         await this.connect()
 

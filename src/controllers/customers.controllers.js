@@ -5,22 +5,29 @@ const dao = new CustomerDAO()
 
 export async function getCustomers(req, res){
     const paramCPF = req.query.cpf
+    const offset = req.query.offset
+    const limit = req.query.limit
     try{
-        if(paramCPF){
+        if( paramCPF ){
             const customers = await dao.readIlikeCPF(paramCPF)
             const formatedCustomers = await Promise.all(customers.map(async (customer) => {
                 customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
-                return customer;
+                return customer
             }))
             return res.send(formatedCustomers)
-        }else{
-            const customers = await dao.read()
-            const formatedCustomers = await Promise.all(customers.map(async (customer) => {
-                customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
-                return customer;
-            }))
-            return res.send(formatedCustomers)
+        }if ( offset || limit ){
+            // console.log(offset, limit)
+            const itens = await dao.readLimitOffset(limit, offset)
+            return res.send(itens)
         }
+
+        const customers = await dao.read()
+        const formatedCustomers = await Promise.all(customers.map(async (customer) => {
+            customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
+            return customer;
+        }))
+        return res.send(formatedCustomers)
+
     }catch (err) {
         console.error("Erro getById customer:", err)
         return res.status(500).send("Erro customer.")

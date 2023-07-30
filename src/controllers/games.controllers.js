@@ -4,14 +4,20 @@ const dao = new GamesDAO()
 
 export async function getGames(req, res) {
     const paramName = req.query.name
+    const offset = req.query.offset
+    const limit = req.query.limit
     try {
         if (paramName){
             const itens = await dao.readByName(paramName)
             return res.send(itens)
-        }else{
-            const itens = await dao.read()
+        }if ( offset || limit ){
+            console.log(offset, limit)
+            const itens = await dao.readLimitOffset(limit, offset)
             return res.send(itens)
         }
+        const itens = await dao.read()
+        return res.send(itens)
+        
     } catch (err) {
         console.error("Erro get games:", err)
         return res.status(500).send("Erro games.")

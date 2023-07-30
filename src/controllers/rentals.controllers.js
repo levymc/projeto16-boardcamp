@@ -7,7 +7,8 @@ const dao = new RentalsDAO()
 export async function getRentals(req, res, next){
     const customerId = req.query.customerId
     const gameId = req.query.gameId
-    console.log(gameId, customerId)
+    const offset = req.query.offset
+    const limit = req.query.limit
     try{
         if(customerId){
             const rentals = await dao.readWithJoinByCustomerID(customerId)
@@ -15,6 +16,10 @@ export async function getRentals(req, res, next){
             return next()
         }if(gameId){
             const rentals = await dao.readWithJoinByGameID(gameId)
+            res.rentals = rentals
+            return next()
+        }if( limit || offset ){
+            const rentals = await dao.readLimitOffset(limit, offset)
             res.rentals = rentals
             return next()
         }
