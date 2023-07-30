@@ -9,6 +9,8 @@ export async function getRentals(req, res, next){
     const gameId = req.query.gameId
     const offset = req.query.offset
     const limit = req.query.limit
+    const order = req.query.order
+    const desc = req.query.desc
     try{
         if(customerId){
             const rentals = await dao.readWithJoinByCustomerID(customerId)
@@ -19,7 +21,7 @@ export async function getRentals(req, res, next){
             res.rentals = rentals
             return next()
         }
-        const rentals = await dao.readWithJoin(limit, offset)
+        const rentals = await dao.readWithJoin(limit, offset, order, desc)
         res.rentals = rentals
         next()
         

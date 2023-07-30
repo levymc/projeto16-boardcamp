@@ -62,10 +62,16 @@ export default class CustomerDAO{
         return newCustomer;
     }
 
-    async read(limit = null, offset = null){
+    async read(limit = null, offset = null, order = null, desc = null){
         await this.connect();
 
-        const queryString = 'SELECT * FROM public.customers limit $1 offset $2'
+        let queryString = 'select * from public.customers '
+        if (order){
+            queryString += 'order by ' + order
+            if( desc === 'true' ) queryString += ' desc '
+        }
+        queryString += ' limit $1 offset $2 '
+        console.log(queryString)
         const values = [limit, offset]
         try {
             const response = await this.pool.query(queryString, values)

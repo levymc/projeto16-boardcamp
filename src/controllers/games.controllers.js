@@ -6,12 +6,14 @@ export async function getGames(req, res) {
     const paramName = req.query.name
     const offset = req.query.offset
     const limit = req.query.limit
+    const order = req.query.order
+    const desc = req.query.desc
     try {
         if (paramName){
             const itens = await dao.readByName(paramName)
             return res.send(itens)
         }
-        const itens = await dao.read(limit, offset)
+        const itens = await dao.read(limit, offset, order, desc)
         return res.send(itens)
         
     } catch (err) {
