@@ -48,6 +48,7 @@ export async function postRental(req, res){
 
 export async function finalizeRental(req, res) {
     const id = req.params.id;
+    const returnDate = format(new Date(), 'yyyy-MM-dd')
     try {
         const rental = await dao.readById(id)
         if (rental === null) return res.sendStatus(404)
@@ -64,7 +65,7 @@ export async function finalizeRental(req, res) {
             gameId: rental.gameId,
             rentDate: format(rental.rentDate, 'yyyy-MM-dd'),
             daysRented: rental.daysRented,
-            returnDate: format(new Date(), 'yyyy-MM-dd'),
+            returnDate: returnDate,
             originalPrice: rental.originalPrice,
             delayFee: delayFee,
         }
@@ -72,6 +73,7 @@ export async function finalizeRental(req, res) {
         const updatedData = await dao.update(id, newData)
     
         if (updatedData) {
+            console.log(updatedData)
             res.sendStatus(200)
         } else {
             res.status(500).send("Erro ao atualizar aluguel.");
