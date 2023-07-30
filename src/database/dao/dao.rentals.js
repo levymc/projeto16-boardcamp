@@ -138,18 +138,22 @@ export default class RentalsDAO {
         }
     }
 
-    async readWithJoin(limit = null, offset = null) {
+    async readWithJoin(limit = null, offset = null, order = null, desc = null) {
         await this.connect();
       
-        const queryString = `
+        let queryString = `
           SELECT r.*, c."name" AS "customerName", g."name" AS "gameName"
           FROM public.rentals r
           JOIN public.customers c ON r."customerId" = c."id"
           JOIN public.games g ON r."gameId" = g."id" 
-          LIMIT $1 OFFSET $2;
         `;
-      
-        const values = [limit, offset];
+        if (order){
+            queryString += 'order by ' + order
+            if( desc === 'true' ) queryString += ' desc '
+        }
+        queryString += ' limit $1 offset $2 '
+        console.log(queryString)
+        const values = [limit, offset]
       
         try {
           const response = await this.pool.query(queryString, values);

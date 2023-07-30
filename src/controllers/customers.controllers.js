@@ -7,6 +7,8 @@ export async function getCustomers(req, res){
     const paramCPF = req.query.cpf
     const offset = req.query.offset
     const limit = req.query.limit
+    const order = req.query.order
+    const desc = req.query.desc
     try{
         if( paramCPF ){
             const customers = await dao.readIlikeCPF(paramCPF)
@@ -16,7 +18,7 @@ export async function getCustomers(req, res){
             }))
             return res.send(formatedCustomers)
         }
-        const customers = await dao.read(limit, offset)
+        const customers = await dao.read(limit, offset, order, desc)
         const formatedCustomers = await Promise.all(customers.map(async (customer) => {
             customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd')
             return customer;
