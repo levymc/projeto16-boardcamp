@@ -174,28 +174,22 @@ export default class RentalsDAO {
     }
   
     async delete(id) {
-        await this.connect();
+        await this.connect()
     
-        const index = this.rentals.findIndex((rental) => rental.id === id);
-        if (index === -1) {
-            await this.disconnect();
-            return null;
-        }
-    
-        const queryString = 'DELETE FROM public.rentals WHERE id = $1';
-        const values = [id];
+        const queryString = 'delete from public.rentals where id = $1'
+        const values = [id]
     
         try {
-            await this.pool.query(queryString, values);
-            console.log("Aluguel excluído do banco de dados.");
+            await this.pool.query(queryString, values)
+            console.log("Aluguel excluído do banco de dados.")
         } catch (error) {
-            console.error("Erro delete rental: ", error.message);
+            console.error("Erro delete rental: ", error.message)
+            return false
         }
     
-        const deletedRental = this.rentals.splice(index, 1)[0];
-    
-        await this.disconnect();
-        return deletedRental;
+        await this.disconnect()
+        return true
     }
+      
   }
   
