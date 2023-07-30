@@ -9,8 +9,12 @@ export async function getRentals(req, res, next){
     const gameId = req.query.gameId
     console.log(gameId, costumerId)
     try{
-        if(costumerId || gameId){
-            const rentals = await dao.readWithJoinById(gameId, costumerId)
+        if(costumerId){
+            const rentals = await dao.readWithJoinByCustomerID(costumerId)
+            res.rentals = rentals
+            next()
+        }else if(gameId){
+            const rentals = await dao.readWithJoinByGameID(gameId)
             res.rentals = rentals
             next()
         }else{
