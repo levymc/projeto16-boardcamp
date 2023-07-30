@@ -95,8 +95,24 @@ export default class CustomerDAO{
             console.error("Erro consulta por id: ", error.message);
             await this.disconnect();
             return null;
+        }   
+    }
+
+    async readLimitOffset(limit = null, offset = null){
+        await this.connect()
+
+        const queryString = `select * from public.customers limit $1 offset $2`
+        const values = [limit, offset]
+        try {
+            const response = await this.pool.query(queryString, values);
+            console.log('Consulta realizada com sucesso.');
+            await this.disconnect();
+            return response.rows || [];
+        } catch (error) {
+            console.error('Erro ao consultar os itens no banco de dados:', error.message);
+            await this.disconnect();
+            return [];
         }
-        
     }
 
     async readByCPF(cpf){
