@@ -12,7 +12,7 @@ export default async function conectDB(){
      
      try {
           const client = await pool.connect();
-          console.log("PostgreSQL database is connected");
+          // console.log("PostgreSQL database is connected");
           client.release()
           } catch (error) {
           console.error("Error connecting to PostgreSQL database:", error.message);

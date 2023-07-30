@@ -11,11 +11,15 @@ export async function validateCPF(req, res, next){
 }
 
 export async function validateCPF2(req, res, next){
+    console.log(req.body)
     const id = Number(req.params.id)
     const cpf = req.body.cpf
     const result = await orm.readByCPF(cpf)
-    if (result.id === id) return next()
-    console.log("IDs diferentes")
+    console.log(result)
+    if (result != null){
+        if (result.id === id) return next()
+    }
+    console.log("IDs diferentes", id, result )
     if (result) return res.status(409).send("CPF já existente.")
     next()
 }

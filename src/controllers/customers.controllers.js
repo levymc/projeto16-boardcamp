@@ -32,7 +32,7 @@ export async function postCustomer(req, res){
 
 export async function updateCustomer(req, res){
     const data = req.body
-    console.log("AQUI")
+    console.log(data)
     const id = req.params.id
     const updateData = await dao.update(id, data)
     if(updateData){
