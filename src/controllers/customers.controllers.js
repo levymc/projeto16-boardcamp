@@ -9,14 +9,12 @@ export async function getCustomers(req, res){
         customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
         return customer;
     }))
-    // console.log(customers)
     res.send(customers)
 }
 
 export async function getCustomerById(req, res) {
     const id = req.params;
     const customer = await dao.readById(id.id);
-    console.log(customer);
 
     if (customer) {
         customer.birthday = format(new Date(customer.birthday), 'yyyy-MM-dd');
@@ -26,11 +24,20 @@ export async function getCustomerById(req, res) {
     }
 }
 
-
 export async function postCustomer(req, res){
     const data = req.body
     const insertedData = await dao.create(data)
-
-    
     if (insertedData) return res.sendStatus(201)
+}
+
+export async function updateCustomer(req, res){
+    const data = req.body
+    console.log(data)
+    const id = req.params.id
+    const updateData = await dao.update(id, data)
+    if(updateData){
+        return res.sendStatus(200)
+    }else{
+        return res.sendStatus(500)
+    }
 }

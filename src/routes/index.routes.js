@@ -1,10 +1,10 @@
 import { Router } from "express";
 // import authRouter from "./auth.routes.js";
 import { getGames, postGames } from "../controllers/games.controllers.js"
-import { getCustomers, getCustomerById, postCustomer } from "../controllers/customers.controllers.js";
+import { getCustomers, getCustomerById, postCustomer, updateCustomer } from "../controllers/customers.controllers.js";
 import { getRentals, formatRentals, postRental } from "../controllers/rentals.controllers.js";
 import { checkIDs, checkStock } from "../middlewares/validateRental.js";
-import validateCPF from "../middlewares/validateCPF.js";
+import { validateCPF, validateCPF2 } from "../middlewares/validateCPF.js";
 import validateSchema from "../middlewares/validateSchema.js";
 import itemSchema from "../schemas/item.schema.js";
 import customerSchema from "../schemas/customer.schema.js";
@@ -20,6 +20,7 @@ router.post('/games', (req, res, next) => { validateSchema(req, res, next, itemS
 router.get('/customers', getCustomers)
 router.get('/customers/:id', getCustomerById)
 router.post('/customers', (req, res, next) => { validateSchema(req, res, next, customerSchema) }, validateCPF, postCustomer)
+router.put('/customers/:id', (req, res, next) => { validateSchema(req, res, next, customerSchema) }, validateCPF2, updateCustomer)
 
 router.get('/rentals', getRentals, formatRentals)
 router.post('/rentals', checkIDs, checkStock, postRental)

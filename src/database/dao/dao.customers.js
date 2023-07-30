@@ -116,42 +116,34 @@ export default class CustomerDAO{
         
     }
 
-    async update(id, customerData){
-        await this.connect()
+    async update(id, customerData) {
+        await this.connect();
 
-        const customerToUpdate = this.customers.find((customer) => customer.id === id);
-        if (!customerToUpdate) {
-            await this.disconnect();
-            return null; // Cliente não encontrado, retorna null
-        }
-
-        customerToUpdate.name = customerData.name || customerToUpdate.name;
-        customerToUpdate.phone = customerData.phone || customerToUpdate.phone;
-        customerToUpdate.cpf = customerData.cpf || customerToUpdate.cpf;
-        customerToUpdate.birthday = customerData.birthday || customerToUpdate.birthday;
-
-        const queryString =
-            'UPDATE public.customers SET name = $1, phone = $2, cpf = $3, birthday = $4 WHERE id = $5';
+        const queryString = `update     
+                                public.customers 
+                            set 
+                                name = $1, phone = $2, cpf = $3, birthday = $4 
+                            where 
+                                id = $5`
         const values = [
-            customerToUpdate.name,
-            customerToUpdate.phone,
-            customerToUpdate.cpf,
-            customerToUpdate.birthday,
-            id,
-        ];
-
+          customerData.name,
+          customerData.phone,
+          customerData.cpf,
+          customerData.birthday,
+          id,
+        ]
+    
         try {
             await this.pool.query(queryString, values);
             console.log("Cliente atualizado no banco de dados.");
         } catch (error) {
             console.error(
-            "Erro ao atualizar o cliente no banco de dados:",
-            error.message
+                "Erro ao atualizar o cliente no banco de dados:",
+                error.message
             );
         }
-
         await this.disconnect();
-        return customerToUpdate;
+        return true
     }
 
     async delete(id) {
