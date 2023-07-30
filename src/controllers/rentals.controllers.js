@@ -1,5 +1,5 @@
 import RentalsDAO from "../database/dao/dao.rentals.js";
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 
 
 const dao = new RentalsDAO()
@@ -44,5 +44,53 @@ export async function postRental(req, res){
         console.error("Erro insert rental:", err);
         res.status(500).send("Erro ao inserir aluguel.");
     }
+}
+
+export async function finalizeRental(req, res) {
+    const returnDate = format(new Date(), 'yyyy-MM-dd');
+    const id = req.params.id;
+    try {
+        const rental = await dao.readById(id)
+        if (rental === null) return res.sendStatus(404);
+
+        const finalDate = format(addDays(rental.rentDate, rental.daysRented), 'yyyy-MM-dd')
+        const priceDay = rental.originalPrice/rental.daysRented
+        const delayFee = difDias(finalDate, returnDate) > 0 ? difDias(finalDate, returnDate) * priceDay : 0
+
+        console.log(difDias(finalDate, returnDate), priceDay)
     
+        const newData = {
+            customerId: rental.customerId,
+            gameId: rental.gameId,
+            rentDate: format(rental.rentDate, 'yyyy-MM-dd'),
+            daysRented: rental.daysRented,
+            returnDate: returnDate,
+            originalPrice: rental.originalPrice,
+            delayFee: delayFee,
+        };
+        
+        console.log(newData)
+
+        // const updatedData = await dao.update(id, newData)
+    
+        // if (updatedData) {
+        //     res.send("Aluguel finalizado com sucesso.");
+        // } else {
+        //     res.status(500).send("Erro ao atualizar aluguel.");
+        // }
+    }catch (err) {
+        console.error("Erro update rental:", err);
+        res.status(500).send("Erro ao atualizar aluguel.");
+    }
+  }
+
+function difDias(d1, d2){
+    const data1 = new Date(d1)
+    const data2 = new Date(d2)
+
+    const dif = data2 - data1
+
+    const dias = dif / (1000 * 60 * 60 * 24);
+
+    return dias + 1
 }
