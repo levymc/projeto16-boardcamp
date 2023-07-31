@@ -12,7 +12,7 @@ export async function getRentals(req, res, next){
     const order = req.query.order
     const desc = req.query.desc
     const status = req.query.status
-    const startDate = req.query.startDate
+    const startDate = format(addDays(new Date(req.query.startDate), 1), 'yyyy-MM-dd')
     try{
         if(customerId){
             const rentals = await dao.readWithJoinByCustomerID(customerId)

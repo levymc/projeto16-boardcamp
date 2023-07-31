@@ -199,7 +199,7 @@ export default class RentalsDAO {
                 join public.customers c ON r."customerId" = c."id"
                 join public.games g ON r."gameId" = g."id"
                 `
-        if (startDate ) queryString += ` where r."returnDate" >= $1 `  
+        if (startDate) queryString += ` where r."rentDate" >= $1 `  
         try {
             const response = await this.pool.query(queryString, [startDate])
             console.log("Consulta realizada com sucesso.")

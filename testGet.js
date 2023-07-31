@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.get('http://localhost:5000/rentals?startDate=2023-07-28').then(res => {
+axios.get('http://localhost:5000/rentals?startDate=2023-07-30').then(res => {
     console.log(res.data)
 }).catch(err => {
     console.log(err.response.data)
