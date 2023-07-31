@@ -12,6 +12,7 @@ export async function getRentals(req, res, next){
     const order = req.query.order
     const desc = req.query.desc
     const status = req.query.status
+    const startDate = req.query.startDate
     try{
         if(customerId){
             const rentals = await dao.readWithJoinByCustomerID(customerId)
@@ -23,6 +24,10 @@ export async function getRentals(req, res, next){
             return next()
         }if(status){
             const rentals = await dao.readWithJoinByStatus(status)
+            res.rentals = rentals
+            return next()
+        }if(startDate){
+            const rentals = await dao.readWithJoinByDate(startDate)
             res.rentals = rentals
             return next()
         }
