@@ -167,39 +167,19 @@ export default class RentalsDAO {
         }
     }
 
-    async readWithJoinByStatus( status = null ){
-        await this.connect()
-
-        let queryString = `
-                select r.*, c."name" AS "customerName", g."name" AS "gameName"
-                from public.rentals r
-                join public.customers c ON r."customerId" = c."id"
-                join public.games g ON r."gameId" = g."id"
-                `
-        if (status === "open") queryString += ` where r."returnDate" is null `  
-        else if (status === "closed") queryString += `where r."returnDate" is not null `
-        try {
-            const response = await this.pool.query(queryString)
-            console.log("Consulta realizada com sucesso.")
-            await this.disconnect()
-            return response.rows || []
-        } catch (error) {
-            console.error("Erro rentals JOIN:", error.message)
-            await this.disconnect()
-            return []
-        }
-    }
-
-    async readWithJoinByDate( startDate = null ){
+    async readWithJoinByStatusDate(status = null, startDate = null ){
         await this.connect()
         console.log(startDate)
+        let values = []
         let queryString = `
                 select r.*, c."name" AS "customerName", g."name" AS "gameName"
                 from public.rentals r
                 join public.customers c ON r."customerId" = c."id"
                 join public.games g ON r."gameId" = g."id"
                 `
-        if (startDate) queryString += ` where r."rentDate" >= $1 `  
+        if(startDate && status === "open") queryString += ` where r."rentDate" >= $1 and r."returnDate" is null`  
+        if(startDate && status === "closed") queryString += ` where r."rentDate" >= $1 and r."returnDate" is not null` 
+        if(startDate && status === null) ` where r."rentDate" >= $1 `
         try {
             const response = await this.pool.query(queryString, [startDate])
             console.log("Consulta realizada com sucesso.")

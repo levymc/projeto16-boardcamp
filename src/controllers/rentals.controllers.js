@@ -22,12 +22,8 @@ export async function getRentals(req, res, next){
             const rentals = await dao.readWithJoinByGameID(gameId)
             res.rentals = rentals
             return next()
-        }if(status){
-            const rentals = await dao.readWithJoinByStatus(status)
-            res.rentals = rentals
-            return next()
-        }if(startDate){
-            const rentals = await dao.readWithJoinByDate(startDate)
+        }if(startDate || status){
+            const rentals = await dao.readWithJoinByStatusDate(status, startDate)
             res.rentals = rentals
             return next()
         }
