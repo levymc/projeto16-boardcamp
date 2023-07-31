@@ -9,10 +9,10 @@ export async function getRentals(req, res, next){
     const gameId = req.query.gameId
     const offset = req.query.offset
     const limit = req.query.limit
-    const order = req.query.order
-    const desc = req.query.desc
-    const status = req.query.status
-    const startDate = format(addDays(new Date(req.query.startDate), 1), 'yyyy-MM-dd')
+    const order = req.query.order ? req.query.order : false
+    const desc = req.query.desc ? req.query.desc : false
+    const status = req.query.status ? req.query.status : false
+    const startDate = req.query.startDate ? format(addDays(new Date(req.query.startDate), 1), 'yyyy-MM-dd') : false
     try{
         if(customerId){
             const rentals = await dao.readWithJoinByCustomerID(customerId)
